@@ -1,0 +1,426 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Meu Portal de Planilhas</title>
+  <style>
+    :root{
+      --bg:#0b1220; --card:#0f1a33; --card2:#101f3f;
+      --txt:#eaf0ff; --muted:#a9b7dd; --accent:#6ee7b7; --danger:#fb7185;
+      --border:rgba(255,255,255,.08);
+      --shadow: 0 10px 30px rgba(0,0,0,.35);
+      --radius:16px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, "Helvetica Neue", Arial;
+      background: radial-gradient(1200px 700px at 20% 10%, rgba(110,231,183,.15), transparent 60%),
+                  radial-gradient(900px 600px at 80% 0%, rgba(99,102,241,.20), transparent 55%),
+                  var(--bg);
+      color:var(--txt);
+      min-height:100vh;
+    }
+    a{color:inherit; text-decoration:none}
+    .wrap{max-width:1100px; margin:0 auto; padding:28px 18px 60px}
+    .topbar{
+      display:flex; gap:12px; align-items:center; justify-content:space-between;
+      margin-bottom:18px;
+    }
+    .brand{
+      display:flex; gap:10px; align-items:center;
+    }
+    .logo{
+      width:42px; height:42px; border-radius:14px;
+      background: linear-gradient(135deg, rgba(110,231,183,.9), rgba(99,102,241,.9));
+      box-shadow: var(--shadow);
+    }
+    .brand h1{font-size:18px; margin:0}
+    .brand p{margin:0; color:var(--muted); font-size:12px}
+    .btn{
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.05);
+      color:var(--txt);
+      padding:10px 12px;
+      border-radius:12px;
+      cursor:pointer;
+      transition:.2s;
+    }
+    .btn:hover{transform: translateY(-1px); background: rgba(255,255,255,.08)}
+    .btn.danger{border-color: rgba(251,113,133,.35)}
+    .btn.danger:hover{background: rgba(251,113,133,.12)}
+    .card{
+      border:1px solid var(--border);
+      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+    .card-in{padding:18px}
+    .row{display:flex; gap:12px; flex-wrap:wrap}
+    .search{
+      flex:1;
+      display:flex; gap:10px; align-items:center;
+      padding:12px 14px;
+      border-radius:14px;
+      border:1px solid var(--border);
+      background: rgba(15,26,51,.65);
+    }
+    .search input{
+      flex:1;
+      border:none; outline:none;
+      background: transparent; color: var(--txt);
+      font-size:14px;
+    }
+    .pill{
+      font-size:12px; padding:6px 10px;
+      border-radius:999px;
+      border:1px solid var(--border);
+      color: var(--muted);
+      background: rgba(255,255,255,.04);
+      user-select:none;
+    }
+    .grid{
+      display:grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap:14px;
+      margin-top:14px;
+    }
+    .col-4{grid-column: span 4}
+    .col-6{grid-column: span 6}
+    .col-12{grid-column: span 12}
+    @media (max-width: 900px){
+      .col-4,.col-6{grid-column: span 12}
+    }
+    .section h2{
+      margin:0 0 10px; font-size:14px;
+      color: var(--txt);
+      display:flex; align-items:center; justify-content:space-between;
+    }
+    .section small{color:var(--muted)}
+    .links{
+      display:flex; flex-direction:column; gap:10px;
+    }
+    .link{
+      display:flex; align-items:center; justify-content:space-between;
+      gap:10px;
+      padding:12px 12px;
+      border-radius:14px;
+      background: rgba(16,31,63,.55);
+      border:1px solid var(--border);
+      transition:.15s;
+    }
+    .link:hover{transform: translateY(-1px); background: rgba(16,31,63,.75)}
+    .link .meta{display:flex; gap:10px; align-items:center; min-width:0}
+    .icon{
+      width:36px; height:36px; border-radius:12px;
+      background: rgba(110,231,183,.12);
+      border:1px solid rgba(110,231,183,.25);
+      display:grid; place-items:center;
+      flex:0 0 auto;
+    }
+    .title{font-weight:650; font-size:13px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+    .desc{font-size:12px; color:var(--muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+    .open{
+      padding:8px 10px;
+      border-radius:12px;
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.04);
+      font-size:12px;
+      flex:0 0 auto;
+    }
+    .open:hover{background: rgba(255,255,255,.08)}
+    .foot{
+      margin-top:16px;
+      color:var(--muted);
+      font-size:12px;
+      display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap;
+    }
+
+    /* Login modal */
+    .overlay{
+      position:fixed; inset:0;
+      background: rgba(0,0,0,.55);
+      display:flex; align-items:center; justify-content:center;
+      padding:18px;
+    }
+    .modal{
+      width:min(520px, 100%);
+      border-radius: 20px;
+      border:1px solid var(--border);
+      background: linear-gradient(180deg, rgba(15,26,51,.95), rgba(11,18,32,.95));
+      box-shadow: 0 30px 80px rgba(0,0,0,.55);
+      overflow:hidden;
+    }
+    .modal .head{
+      padding:18px 18px 10px;
+      display:flex; gap:12px; align-items:center;
+      border-bottom:1px solid var(--border);
+    }
+    .modal .body{padding:16px 18px 18px}
+    .modal h3{margin:0; font-size:16px}
+    .modal p{margin:4px 0 0; color:var(--muted); font-size:12px; line-height:1.35}
+    .field{
+      margin-top:12px;
+      display:flex; gap:10px;
+      align-items:center;
+      padding:12px 14px;
+      border-radius:14px;
+      border:1px solid var(--border);
+      background: rgba(255,255,255,.04);
+    }
+    .field input{
+      flex:1;
+      border:none; outline:none;
+      background: transparent;
+      color: var(--txt);
+      font-size:14px;
+    }
+    .err{color: var(--danger); font-size:12px; margin-top:10px; display:none}
+    .ok{color: var(--accent); font-size:12px; margin-top:10px; display:none}
+  </style>
+</head>
+<body>
+  <!-- LOGIN -->
+  <div id="overlay" class="overlay" aria-modal="true" role="dialog">
+    <div class="modal">
+      <div class="head">
+        <div class="logo" aria-hidden="true"></div>
+        <div>
+          <h3>Entrar no Portal</h3>
+          <p>Digite a senha para ver seus links. Dica: mantenha suas planilhas com permissão no Google Drive.</p>
+        </div>
+      </div>
+      <div class="body">
+        <div class="field">
+          <span aria-hidden="true">🔒</span>
+          <input id="pass" type="password" placeholder="Senha do portal" autocomplete="current-password" />
+          <button id="btnEnter" class="btn">Entrar</button>
+        </div>
+        <div id="msgErr" class="err">Senha incorreta.</div>
+        <div id="msgOk" class="ok">Ok! Abrindo…</div>
+        <div class="foot" style="margin-top:14px">
+          <span>✅ Busca + categorias + botões</span>
+          <span>💡 Para trocar a senha, edite o arquivo <b>index.html</b></span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- APP -->
+  <div class="wrap" id="app" style="display:none">
+    <div class="topbar">
+      <div class="brand">
+        <div class="logo"></div>
+        <div>
+          <h1>Meu Portal de Planilhas</h1>
+          <p>Links organizados: casa • finanças • saúde • etc</p>
+        </div>
+      </div>
+      <button id="logout" class="btn danger">Sair</button>
+    </div>
+
+    <div class="card">
+      <div class="card-in">
+        <div class="row">
+          <div class="search">
+            <span aria-hidden="true">🔎</span>
+            <input id="q" placeholder="Buscar (ex: 'cartas', 'saúde', 'gastos'...)" />
+            <span id="count" class="pill">0 links</span>
+          </div>
+          <span class="pill">Enter abre o 1º resultado</span>
+        </div>
+
+        <div id="grid" class="grid" style="margin-top:16px"></div>
+
+        <div class="foot">
+          <span>📌 Dica: mantenha suas planilhas como “Somente você” (ou pessoas específicas).</span>
+          <span>⚙️ Editar links: procure por <b>LINKS = [...]</b> no código</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script>
+/**
+ * =========================================================
+ * 1) DEFINA SUA SENHA AQUI
+ * =========================================================
+ * Troque "minha_senha_123" pela sua senha.
+ * Dica: use algo longo e não óbvio.
+ */
+const PASSWORD = "minha_senha_123";
+
+/**
+ * =========================================================
+ * 2) COLE/EDITE SEUS LINKS AQUI
+ * =========================================================
+ * title: nome do botão
+ * desc: descrição curta
+ * url: link da planilha
+ * cat: categoria (vai virar uma seção)
+ */
+const LINKS = [
+  { title: "Controle Financeiro Familiar", desc: "Contas, receitas, saldo, dashboard", url: "https://docs.google.com/spreadsheets/d/SEU_ID_AQUI", cat: "Finanças" },
+  { title: "Saúde - Checkups e exames", desc: "Lista e histórico", url: "https://docs.google.com/spreadsheets/d/SEU_ID_AQUI", cat: "Saúde" },
+  { title: "Casa - Manutenções", desc: "Serviços, datas, custos", url: "https://docs.google.com/spreadsheets/d/SEU_ID_AQUI", cat: "Casa" },
+  { title: "Cartas Pokémon - Inventário", desc: "Compra, venda, ROI", url: "https://docs.google.com/spreadsheets/d/SEU_ID_AQUI", cat: "Hobbies" },
+];
+
+/**
+ * =========================================================
+ * APP
+ * =========================================================
+ */
+const overlay = document.getElementById("overlay");
+const app = document.getElementById("app");
+const pass = document.getElementById("pass");
+const btnEnter = document.getElementById("btnEnter");
+const msgErr = document.getElementById("msgErr");
+const msgOk = document.getElementById("msgOk");
+const q = document.getElementById("q");
+const grid = document.getElementById("grid");
+const count = document.getElementById("count");
+const logout = document.getElementById("logout");
+
+function setAuthed(v){
+  localStorage.setItem("portal_authed", v ? "1" : "0");
+}
+function isAuthed(){
+  return localStorage.getItem("portal_authed") === "1";
+}
+
+function normalize(s){ return (s||"").toString().toLowerCase().trim(); }
+
+function groupByCategory(items){
+  const map = new Map();
+  for(const it of items){
+    const cat = it.cat || "Outros";
+    if(!map.has(cat)) map.set(cat, []);
+    map.get(cat).push(it);
+  }
+  // ordena categorias e itens
+  const cats = Array.from(map.keys()).sort((a,b)=>a.localeCompare(b,'pt-BR'));
+  return cats.map(c => [c, map.get(c).sort((a,b)=>a.title.localeCompare(b.title,'pt-BR'))]);
+}
+
+function iconFor(cat){
+  const c = normalize(cat);
+  if(c.includes("fin")) return "💰";
+  if(c.includes("saú") || c.includes("sau")) return "🩺";
+  if(c.includes("cas")) return "🏠";
+  if(c.includes("trab")) return "💼";
+  if(c.includes("hob") || c.includes("pok")) return "🎴";
+  return "📎";
+}
+
+function render(){
+  const term = normalize(q.value);
+  const filtered = LINKS.filter(it => {
+    const hay = normalize(it.title + " " + it.desc + " " + it.cat);
+    return !term || hay.includes(term);
+  });
+
+  count.textContent = `${filtered.length} link${filtered.length===1?"":"s"}`;
+
+  const groups = groupByCategory(filtered);
+  grid.innerHTML = "";
+
+  if(filtered.length === 0){
+    const empty = document.createElement("div");
+    empty.className = "col-12 card";
+    empty.innerHTML = `<div class="card-in"><b>Nenhum resultado</b><div style="color:var(--muted); margin-top:6px">Tente outra palavra na busca.</div></div>`;
+    grid.appendChild(empty);
+    return;
+  }
+
+  for(const [cat, items] of groups){
+    const col = document.createElement("div");
+    col.className = "col-4 section";
+    col.innerHTML = `
+      <div class="card">
+        <div class="card-in">
+          <h2>
+            <span>${cat}</span>
+            <small>${items.length}</small>
+          </h2>
+          <div class="links"></div>
+        </div>
+      </div>
+    `;
+    const list = col.querySelector(".links");
+
+    for(const it of items){
+      const a = document.createElement("a");
+      a.className = "link";
+      a.href = it.url;
+      a.target = "_blank";
+      a.rel = "noopener noreferrer";
+      a.dataset.search = normalize(it.title + " " + it.desc + " " + it.cat);
+      a.innerHTML = `
+        <div class="meta">
+          <div class="icon" aria-hidden="true">${iconFor(cat)}</div>
+          <div style="min-width:0">
+            <div class="title">${it.title}</div>
+            <div class="desc">${it.desc || ""}</div>
+          </div>
+        </div>
+        <div class="open">Abrir ↗</div>
+      `;
+      list.appendChild(a);
+    }
+    grid.appendChild(col);
+  }
+}
+
+function enter(){
+  msgErr.style.display = "none";
+  msgOk.style.display = "none";
+  if(pass.value === PASSWORD){
+    setAuthed(true);
+    msgOk.style.display = "block";
+    overlay.style.display = "none";
+    app.style.display = "block";
+    setTimeout(() => q.focus(), 50);
+    render();
+  } else {
+    msgErr.style.display = "block";
+  }
+}
+
+btnEnter.addEventListener("click", enter);
+pass.addEventListener("keydown", (e)=>{ if(e.key==="Enter") enter(); });
+
+q.addEventListener("input", render);
+q.addEventListener("keydown", (e)=>{
+  if(e.key === "Enter"){
+    const first = document.querySelector(".link");
+    if(first) first.click();
+  }
+});
+
+logout.addEventListener("click", ()=>{
+  setAuthed(false);
+  app.style.display = "none";
+  overlay.style.display = "flex";
+  pass.value = "";
+  msgErr.style.display = "none";
+  msgOk.style.display = "none";
+  setTimeout(() => pass.focus(), 50);
+});
+
+// Auto-login se já autenticou antes nesse navegador
+window.addEventListener("load", ()=>{
+  if(isAuthed()){
+    overlay.style.display = "none";
+    app.style.display = "block";
+    render();
+    setTimeout(() => q.focus(), 50);
+  } else {
+    overlay.style.display = "flex";
+    setTimeout(() => pass.focus(), 50);
+  }
+});
+</script>
+</body>
+</html>
