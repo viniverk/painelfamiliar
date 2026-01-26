@@ -27,9 +27,7 @@
       display:flex; gap:12px; align-items:center; justify-content:space-between;
       margin-bottom:18px;
     }
-    .brand{
-      display:flex; gap:10px; align-items:center;
-    }
+    .brand{display:flex; gap:10px; align-items:center;}
     .logo{
       width:42px; height:42px; border-radius:14px;
       background: linear-gradient(135deg, rgba(110,231,183,.9), rgba(99,102,241,.9));
@@ -45,10 +43,15 @@
       border-radius:12px;
       cursor:pointer;
       transition:.2s;
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
     }
     .btn:hover{transform: translateY(-1px); background: rgba(255,255,255,.08)}
     .btn.danger{border-color: rgba(251,113,133,.35)}
     .btn.danger:hover{background: rgba(251,113,133,.12)}
+    .btn.accent{border-color: rgba(110,231,183,.35)}
+    .btn.accent:hover{background: rgba(110,231,183,.10)}
     .card{
       border:1px solid var(--border);
       background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
@@ -98,9 +101,7 @@
       display:flex; align-items:center; justify-content:space-between;
     }
     .section small{color:var(--muted)}
-    .links{
-      display:flex; flex-direction:column; gap:10px;
-    }
+    .links{display:flex; flex-direction:column; gap:10px;}
     .link{
       display:flex; align-items:center; justify-content:space-between;
       gap:10px;
@@ -109,6 +110,7 @@
       background: rgba(16,31,63,.55);
       border:1px solid var(--border);
       transition:.15s;
+      cursor:pointer;
     }
     .link:hover{transform: translateY(-1px); background: rgba(16,31,63,.75)}
     .link .meta{display:flex; gap:10px; align-items:center; min-width:0}
@@ -143,6 +145,7 @@
       background: rgba(0,0,0,.55);
       display:flex; align-items:center; justify-content:center;
       padding:18px;
+      z-index: 50;
     }
     .modal{
       width:min(520px, 100%);
@@ -178,8 +181,43 @@
     }
     .err{color: var(--danger); font-size:12px; margin-top:10px; display:none}
     .ok{color: var(--accent); font-size:12px; margin-top:10px; display:none}
+
+    /* Viewer (iframe) */
+    #viewer{
+      display:none;
+      position:fixed;
+      inset:0;
+      background: var(--bg);
+      z-index: 40;
+    }
+    .viewerTop{
+      padding:10px;
+      background: rgba(15,26,51,.95);
+      border-bottom:1px solid var(--border);
+      display:flex;
+      gap:10px;
+      align-items:center;
+      justify-content:space-between;
+      flex-wrap:wrap;
+    }
+    .viewerTitle{
+      display:flex;
+      flex-direction:column;
+      gap:2px;
+      min-width: 240px;
+    }
+    .viewerTitle b{font-size:13px}
+    .viewerTitle span{font-size:12px; color:var(--muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width: 70vw;}
+    .viewerActions{display:flex; gap:10px; flex-wrap:wrap}
+    #sheetFrame{
+      width:100%;
+      height: calc(100vh - 64px);
+      border:none;
+      background: #0b1220;
+    }
   </style>
 </head>
+
 <body>
   <!-- LOGIN -->
   <div id="overlay" class="overlay" aria-modal="true" role="dialog">
@@ -188,20 +226,20 @@
         <div class="logo" aria-hidden="true"></div>
         <div>
           <h3>Entrar no Portal</h3>
-          <p>Digite a senha para ver seus links. Dica: mantenha suas planilhas com permissão no Google Drive.</p>
+          <p>Digite a senha para ver seus links. (Dica: permissão no Drive é a segurança real.)</p>
         </div>
       </div>
       <div class="body">
         <div class="field">
           <span aria-hidden="true">🔒</span>
           <input id="pass" type="password" placeholder="Senha do portal" autocomplete="current-password" />
-          <button id="btnEnter" class="btn">Entrar</button>
+          <button id="btnEnter" class="btn accent">Entrar</button>
         </div>
         <div id="msgErr" class="err">Senha incorreta.</div>
         <div id="msgOk" class="ok">Ok! Abrindo…</div>
         <div class="foot" style="margin-top:14px">
-          <span>✅ Busca + categorias + botões</span>
-          <span>💡 Para trocar a senha, edite o arquivo <b>index.html</b></span>
+          <span>✅ Busca + categorias + visualização embutida</span>
+          <span>⚙️ Trocar senha: edite <b>PASSWORD</b> no código</span>
         </div>
       </div>
     </div>
@@ -234,11 +272,33 @@
         <div id="grid" class="grid" style="margin-top:16px"></div>
 
         <div class="foot">
-          <span>📌 Dica: mantenha suas planilhas como “Somente você” (ou pessoas específicas).</span>
-          <span>⚙️ Editar links: procure por <b>LINKS = [...]</b> no código</span>
+          <span>📌 Se uma planilha não abrir embutida: use “Publicar na web” e cole o link <b>pubhtml</b>.</span>
+          <span>🧩 Editar links: procure por <b>LINKS = [...]</b> no código</span>
         </div>
       </div>
     </div>
+  </div>
+
+  <!-- VIEWER -->
+  <div id="viewer">
+    <div class="viewerTop">
+      <div class="viewerActions">
+        <button id="btnBack" class="btn">⬅ Voltar</button>
+        <button id="btnFull" class="btn">⛶ Tela cheia</button>
+        <a id="btnOpenGoogle" class="btn" href="#" target="_blank" rel="noopener noreferrer">↗ Abrir no Google</a>
+      </div>
+
+      <div class="viewerTitle">
+        <b id="viewerName">Visualizando</b>
+        <span id="viewerUrl">—</span>
+      </div>
+
+      <div class="viewerActions">
+        <span class="pill" id="viewerCat">—</span>
+      </div>
+    </div>
+
+    <iframe id="sheetFrame" src="" loading="lazy"></iframe>
   </div>
 
 <script>
@@ -246,25 +306,47 @@
  * =========================================================
  * 1) DEFINA SUA SENHA AQUI
  * =========================================================
- * Troque "minha_senha_123" pela sua senha.
- * Dica: use algo longo e não óbvio.
  */
-const PASSWORD = "palmeiras";
+const PASSWORD = "minha_senha_123";
 
 /**
  * =========================================================
  * 2) COLE/EDITE SEUS LINKS AQUI
  * =========================================================
- * title: nome do botão
- * desc: descrição curta
- * url: link da planilha
- * cat: categoria (vai virar uma seção)
+ * IMPORTANTE:
+ * - Para abrir EMBUTIDO, prefira links assim (pubhtml):
+ *   https://docs.google.com/spreadsheets/d/ID/pubhtml?widget=true&headers=false
+ * - Para o botão "Abrir no Google", informe também o urlGoogle (link normal /edit).
  */
 const LINKS = [
-  { title: "Controle Financeiro Familiar", desc: "Contas, receitas, saldo, dashboard", url: "https://docs.google.com/spreadsheets/d/1y0_IjfcVK6D8wlpM4RKMLNWQ3aui4vkvZyy0QPrLhNw/edit?gid=1877014164#gid=1877014164", cat: "Finanças" },
-  { title: "Saúde - Checkups e exames", desc: "Lista e histórico", url: "https://docs.google.com/spreadsheets/d/SEU_ID_AQUI", cat: "Saúde" },
-  { title: "Casa - Manutenções", desc: "Serviços, datas, custos", url: "https://docs.google.com/spreadsheets/d/SEU_ID_AQUI", cat: "Casa" },
-  { title: "Cartas Pokémon - Inventário", desc: "Compra, venda, ROI", url: "https://docs.google.com/spreadsheets/d/SEU_ID_AQUI", cat: "Hobbies" },
+  {
+    title: "Controle Financeiro Familiar",
+    desc: "Contas, receitas, saldo, dashboard",
+    cat: "Finanças",
+    urlEmbed: "https://docs.google.com/spreadsheets/d/SEU_ID_AQUI/pubhtml?widget=true&headers=false",
+    urlGoogle: "https://docs.google.com/spreadsheets/d/SEU_ID_AQUI/edit"
+  },
+  {
+    title: "Saúde - Checkups e exames",
+    desc: "Lista e histórico",
+    cat: "Saúde",
+    urlEmbed: "https://docs.google.com/spreadsheets/d/SEU_ID_AQUI/pubhtml?widget=true&headers=false",
+    urlGoogle: "https://docs.google.com/spreadsheets/d/SEU_ID_AQUI/edit"
+  },
+  {
+    title: "Casa - Manutenções",
+    desc: "Serviços, datas, custos",
+    cat: "Casa",
+    urlEmbed: "https://docs.google.com/spreadsheets/d/SEU_ID_AQUI/pubhtml?widget=true&headers=false",
+    urlGoogle: "https://docs.google.com/spreadsheets/d/SEU_ID_AQUI/edit"
+  },
+  {
+    title: "Cartas Pokémon - Inventário",
+    desc: "Compra, venda, ROI",
+    cat: "Hobbies",
+    urlEmbed: "https://docs.google.com/spreadsheets/d/SEU_ID_AQUI/pubhtml?widget=true&headers=false",
+    urlGoogle: "https://docs.google.com/spreadsheets/d/SEU_ID_AQUI/edit"
+  },
 ];
 
 /**
@@ -283,13 +365,17 @@ const grid = document.getElementById("grid");
 const count = document.getElementById("count");
 const logout = document.getElementById("logout");
 
-function setAuthed(v){
-  localStorage.setItem("portal_authed", v ? "1" : "0");
-}
-function isAuthed(){
-  return localStorage.getItem("portal_authed") === "1";
-}
+const viewer = document.getElementById("viewer");
+const sheetFrame = document.getElementById("sheetFrame");
+const btnBack = document.getElementById("btnBack");
+const btnFull = document.getElementById("btnFull");
+const btnOpenGoogle = document.getElementById("btnOpenGoogle");
+const viewerName = document.getElementById("viewerName");
+const viewerUrl = document.getElementById("viewerUrl");
+const viewerCat = document.getElementById("viewerCat");
 
+function setAuthed(v){ localStorage.setItem("portal_authed", v ? "1" : "0"); }
+function isAuthed(){ return localStorage.getItem("portal_authed") === "1"; }
 function normalize(s){ return (s||"").toString().toLowerCase().trim(); }
 
 function groupByCategory(items){
@@ -299,7 +385,6 @@ function groupByCategory(items){
     if(!map.has(cat)) map.set(cat, []);
     map.get(cat).push(it);
   }
-  // ordena categorias e itens
   const cats = Array.from(map.keys()).sort((a,b)=>a.localeCompare(b,'pt-BR'));
   return cats.map(c => [c, map.get(c).sort((a,b)=>a.title.localeCompare(b.title,'pt-BR'))]);
 }
@@ -314,15 +399,55 @@ function iconFor(cat){
   return "📎";
 }
 
+function openViewer(item){
+  // Mostra viewer
+  viewer.style.display = "block";
+  app.style.display = "none";
+
+  viewerName.textContent = item.title || "Visualizando";
+  viewerUrl.textContent = item.urlEmbed || "";
+  viewerCat.textContent = item.cat || "—";
+
+  // seta links
+  btnOpenGoogle.href = item.urlGoogle || (item.urlEmbed || "#");
+
+  // carrega iframe
+  sheetFrame.src = item.urlEmbed || "";
+
+  // scroll top (pra ficar clean no celular)
+  window.scrollTo({ top: 0, behavior: "instant" });
+}
+
+function closeViewer(){
+  sheetFrame.src = "";
+  viewer.style.display = "none";
+  app.style.display = "block";
+  setTimeout(() => q && q.focus(), 50);
+}
+
+btnBack.addEventListener("click", closeViewer);
+
+btnFull.addEventListener("click", async ()=>{
+  try{
+    if(!document.fullscreenElement){
+      await sheetFrame.requestFullscreen();
+    } else {
+      await document.exitFullscreen();
+    }
+  } catch(e){
+    // Se o browser bloquear, não quebra nada
+    alert("Seu navegador bloqueou tela cheia aqui. Tente pelo botão 'Abrir no Google'.");
+  }
+});
+
 function render(){
   const term = normalize(q.value);
   const filtered = LINKS.filter(it => {
-    const hay = normalize(it.title + " " + it.desc + " " + it.cat);
+    const hay = normalize((it.title||"") + " " + (it.desc||"") + " " + (it.cat||""));
     return !term || hay.includes(term);
   });
 
   count.textContent = `${filtered.length} link${filtered.length===1?"":"s"}`;
-
   const groups = groupByCategory(filtered);
   grid.innerHTML = "";
 
@@ -351,13 +476,12 @@ function render(){
     const list = col.querySelector(".links");
 
     for(const it of items){
-      const a = document.createElement("a");
-      a.className = "link";
-      a.href = it.url;
-      a.target = "_blank";
-      a.rel = "noopener noreferrer";
-      a.dataset.search = normalize(it.title + " " + it.desc + " " + it.cat);
-      a.innerHTML = `
+      const el = document.createElement("div");
+      el.className = "link";
+      el.setAttribute("role","button");
+      el.tabIndex = 0;
+
+      el.innerHTML = `
         <div class="meta">
           <div class="icon" aria-hidden="true">${iconFor(cat)}</div>
           <div style="min-width:0">
@@ -365,10 +489,20 @@ function render(){
             <div class="desc">${it.desc || ""}</div>
           </div>
         </div>
-        <div class="open">Abrir ↗</div>
+        <div class="open">Abrir ▶</div>
       `;
-      list.appendChild(a);
+
+      el.addEventListener("click", ()=> openViewer(it));
+      el.addEventListener("keydown", (e)=>{
+        if(e.key === "Enter" || e.key === " "){
+          e.preventDefault();
+          openViewer(it);
+        }
+      });
+
+      list.appendChild(el);
     }
+
     grid.appendChild(col);
   }
 }
@@ -381,8 +515,8 @@ function enter(){
     msgOk.style.display = "block";
     overlay.style.display = "none";
     app.style.display = "block";
-    setTimeout(() => q.focus(), 50);
     render();
+    setTimeout(() => q.focus(), 50);
   } else {
     msgErr.style.display = "block";
   }
@@ -394,13 +528,15 @@ pass.addEventListener("keydown", (e)=>{ if(e.key==="Enter") enter(); });
 q.addEventListener("input", render);
 q.addEventListener("keydown", (e)=>{
   if(e.key === "Enter"){
-    const first = document.querySelector(".link");
-    if(first) first.click();
+    const term = normalize(q.value);
+    const filtered = LINKS.filter(it => normalize((it.title||"") + " " + (it.desc||"") + " " + (it.cat||"")).includes(term));
+    if(filtered.length > 0) openViewer(filtered[0]);
   }
 });
 
 logout.addEventListener("click", ()=>{
   setAuthed(false);
+  closeViewer();
   app.style.display = "none";
   overlay.style.display = "flex";
   pass.value = "";
