@@ -1,576 +1,356 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Meu Portal de Planilhas</title>
-  <style>
-    :root{
-      --bg:#0b1220; --card:#0f1a33; --card2:#101f3f;
-      --txt:#eaf0ff; --muted:#a9b7dd; --accent:#6ee7b7; --danger:#fb7185;
-      --border:rgba(255,255,255,.08);
-      --shadow: 0 10px 30px rgba(0,0,0,.35);
-      --radius:16px;
-    }
-    *{box-sizing:border-box}
-    body{
-      margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, "Helvetica Neue", Arial;
-      background: radial-gradient(1200px 700px at 20% 10%, rgba(110,231,183,.15), transparent 60%),
-                  radial-gradient(900px 600px at 80% 0%, rgba(99,102,241,.20), transparent 55%),
-                  var(--bg);
-      color:var(--txt);
-      min-height:100vh;
-    }
-    a{color:inherit; text-decoration:none}
-    .wrap{max-width:1100px; margin:0 auto; padding:28px 18px 60px}
-    .topbar{
-      display:flex; gap:12px; align-items:center; justify-content:space-between;
-      margin-bottom:18px;
-    }
-    .brand{display:flex; gap:10px; align-items:center;}
-    .logo{
-      width:42px; height:42px; border-radius:14px;
-      background: linear-gradient(135deg, rgba(110,231,183,.9), rgba(99,102,241,.9));
-      box-shadow: var(--shadow);
-    }
-    .brand h1{font-size:18px; margin:0}
-    .brand p{margin:0; color:var(--muted); font-size:12px}
-    .btn{
-      border:1px solid var(--border);
-      background: rgba(255,255,255,.05);
-      color:var(--txt);
-      padding:10px 12px;
-      border-radius:12px;
-      cursor:pointer;
-      transition:.2s;
-      display:inline-flex;
-      align-items:center;
-      gap:8px;
-    }
-    .btn:hover{transform: translateY(-1px); background: rgba(255,255,255,.08)}
-    .btn.danger{border-color: rgba(251,113,133,.35)}
-    .btn.danger:hover{background: rgba(251,113,133,.12)}
-    .btn.accent{border-color: rgba(110,231,183,.35)}
-    .btn.accent:hover{background: rgba(110,231,183,.10)}
-    .card{
-      border:1px solid var(--border);
-      background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.03));
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      overflow:hidden;
-    }
-    .card-in{padding:18px}
-    .row{display:flex; gap:12px; flex-wrap:wrap}
-    .search{
-      flex:1;
-      display:flex; gap:10px; align-items:center;
-      padding:12px 14px;
-      border-radius:14px;
-      border:1px solid var(--border);
-      background: rgba(15,26,51,.65);
-    }
-    .search input{
-      flex:1;
-      border:none; outline:none;
-      background: transparent; color: var(--txt);
-      font-size:14px;
-    }
-    .pill{
-      font-size:12px; padding:6px 10px;
-      border-radius:999px;
-      border:1px solid var(--border);
-      color: var(--muted);
-      background: rgba(255,255,255,.04);
-      user-select:none;
-    }
-    .grid{
-      display:grid;
-      grid-template-columns: repeat(12, 1fr);
-      gap:14px;
-      margin-top:14px;
-    }
-    .col-4{grid-column: span 4}
-    .col-6{grid-column: span 6}
-    .col-12{grid-column: span 12}
-    @media (max-width: 900px){
-      .col-4,.col-6{grid-column: span 12}
-    }
-    .section h2{
-      margin:0 0 10px; font-size:14px;
-      color: var(--txt);
-      display:flex; align-items:center; justify-content:space-between;
-    }
-    .section small{color:var(--muted)}
-    .links{display:flex; flex-direction:column; gap:10px;}
-    .link{
-      display:flex; align-items:center; justify-content:space-between;
-      gap:10px;
-      padding:12px 12px;
-      border-radius:14px;
-      background: rgba(16,31,63,.55);
-      border:1px solid var(--border);
-      transition:.15s;
-      cursor:pointer;
-    }
-    .link:hover{transform: translateY(-1px); background: rgba(16,31,63,.75)}
-    .link .meta{display:flex; gap:10px; align-items:center; min-width:0}
-    .icon{
-      width:36px; height:36px; border-radius:12px;
-      background: rgba(110,231,183,.12);
-      border:1px solid rgba(110,231,183,.25);
-      display:grid; place-items:center;
-      flex:0 0 auto;
-    }
-    .title{font-weight:650; font-size:13px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
-    .desc{font-size:12px; color:var(--muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
-    .open{
-      padding:8px 10px;
-      border-radius:12px;
-      border:1px solid var(--border);
-      background: rgba(255,255,255,.04);
-      font-size:12px;
-      flex:0 0 auto;
-    }
-    .open:hover{background: rgba(255,255,255,.08)}
-    .foot{
-      margin-top:16px;
-      color:var(--muted);
-      font-size:12px;
-      display:flex; justify-content:space-between; gap:10px; flex-wrap:wrap;
-    }
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Painel do Vinícios</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧭</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=Figtree:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#ECEEE8; --surface:#F8F9F5; --line:#D5D9CF; --ink:#1B2A24; --muted:#5D6B64;
+  --focus:#2F7D5B;
+  --c-financas:#2F7D5B; --c-fe:#6B4FA0; --c-futebol:#A87A12; --c-casa:#3A6EA5; --c-hobbies:#B23F62; --c-trabalho:#3E5566;
+  --display:"Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --body:"Figtree", "Segoe UI", system-ui, -apple-system, sans-serif;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root{
+    --bg:#121915; --surface:#19221D; --line:#2A3630; --ink:#E4ECE7; --muted:#93A39A; --focus:#6FCB9F;
+    --c-financas:#5CC191; --c-fe:#A98DE0; --c-futebol:#E0B34A; --c-casa:#74A6DA; --c-hobbies:#E57C9C; --c-trabalho:#94AFC2;
+  }
+}
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 var(--body);-webkit-font-smoothing:antialiased}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--focus);outline-offset:3px;border-radius:6px}
+.wrap{max-width:1120px;margin:0 auto;padding:clamp(24px,5vw,56px) clamp(16px,4vw,40px) 64px}
 
-    /* Login modal */
-    .overlay{
-      position:fixed; inset:0;
-      background: rgba(0,0,0,.55);
-      display:flex; align-items:center; justify-content:center;
-      padding:18px;
-      z-index: 50;
-    }
-    .modal{
-      width:min(520px, 100%);
-      border-radius: 20px;
-      border:1px solid var(--border);
-      background: linear-gradient(180deg, rgba(15,26,51,.95), rgba(11,18,32,.95));
-      box-shadow: 0 30px 80px rgba(0,0,0,.55);
-      overflow:hidden;
-    }
-    .modal .head{
-      padding:18px 18px 10px;
-      display:flex; gap:12px; align-items:center;
-      border-bottom:1px solid var(--border);
-    }
-    .modal .body{padding:16px 18px 18px}
-    .modal h3{margin:0; font-size:16px}
-    .modal p{margin:4px 0 0; color:var(--muted); font-size:12px; line-height:1.35}
-    .field{
-      margin-top:12px;
-      display:flex; gap:10px;
-      align-items:center;
-      padding:12px 14px;
-      border-radius:14px;
-      border:1px solid var(--border);
-      background: rgba(255,255,255,.04);
-    }
-    .field input{
-      flex:1;
-      border:none; outline:none;
-      background: transparent;
-      color: var(--txt);
-      font-size:14px;
-    }
-    .err{color: var(--danger); font-size:12px; margin-top:10px; display:none}
-    .ok{color: var(--accent); font-size:12px; margin-top:10px; display:none}
+/* topo */
+header.top{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap}
+.hello{font-family:var(--display);font-weight:800;font-size:clamp(2.4rem,6vw,4.2rem);line-height:1;letter-spacing:-.025em;margin:0}
+.today{margin:10px 0 0;color:var(--muted);font-size:1.05rem}
+.clock{font-family:var(--display);font-weight:400;font-size:clamp(2.4rem,6vw,4.2rem);line-height:1;letter-spacing:-.02em;font-variant-numeric:tabular-nums;color:var(--muted)}
 
-    /* Viewer (iframe) */
-    #viewer{
-      display:none;
-      position:fixed;
-      inset:0;
-      background: var(--bg);
-      z-index: 40;
-    }
-    .viewerTop{
-      padding:10px;
-      background: rgba(15,26,51,.95);
-      border-bottom:1px solid var(--border);
-      display:flex;
-      gap:10px;
-      align-items:center;
-      justify-content:space-between;
-      flex-wrap:wrap;
-    }
-    .viewerTitle{
-      display:flex;
-      flex-direction:column;
-      gap:2px;
-      min-width: 240px;
-    }
-    .viewerTitle b{font-size:13px}
-    .viewerTitle span{font-size:12px; color:var(--muted); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width: 70vw;}
-    .viewerActions{display:flex; gap:10px; flex-wrap:wrap}
-    #sheetFrame{
-      width:100%;
-      height: calc(100vh - 64px);
-      border:none;
-      background: #0b1220;
-    }
-  </style>
+/* busca */
+.search{margin-top:36px;position:relative}
+.search input{width:100%;font:500 1.15rem var(--body);color:var(--ink);background:var(--surface);border:1.5px solid var(--line);border-radius:14px;padding:16px 56px 16px 20px}
+.search input::placeholder{color:var(--muted)}
+.search input:focus{outline:none;border-color:var(--focus)}
+.search kbd{position:absolute;right:16px;top:50%;transform:translateY(-50%);font:600 .85rem var(--body);color:var(--muted);border:1px solid var(--line);border-radius:6px;padding:2px 8px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.chip{font:500 .92rem var(--body);color:var(--ink);background:transparent;border:1px solid var(--line);border-radius:999px;padding:6px 14px;cursor:pointer;display:inline-flex;align-items:center;gap:8px}
+.chip .dot{width:8px;height:8px;border-radius:50%;background:var(--c)}
+.chip[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+
+/* fixados */
+.pinned{margin-top:40px}
+.pinned h2,.shelf h2{font-family:var(--display);font-weight:600;font-size:1.15rem;margin:0 0 12px;display:flex;align-items:center;gap:10px}
+.pinRow{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
+.pinTile{display:flex;flex-direction:column;gap:14px;padding:16px;background:var(--surface);border:1px solid var(--line);border-radius:16px;text-decoration:none;cursor:pointer;text-align:left;font:inherit;color:inherit;width:100%}
+.pinTile:hover{border-color:var(--c)}
+.pinTile .mono{width:48px;height:48px;font-size:1.1rem}
+.pinTile b{font-weight:600;line-height:1.25}
+
+/* estantes por categoria */
+.shelves{margin-top:40px;columns:3 300px;column-gap:28px}
+.shelf{break-inside:avoid;margin-bottom:32px}
+.shelf h2 .bar{width:14px;height:14px;border-radius:4px;background:var(--c)}
+.shelf h2 small{font:500 .85rem var(--body);color:var(--muted)}
+.list{list-style:none;margin:0;padding:0;border-top:2px solid var(--c)}
+.row{display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--line)}
+.open{flex:1;display:flex;align-items:center;gap:14px;padding:12px 4px;text-decoration:none;min-width:0;background:none;border:0;font:inherit;color:inherit;text-align:left;cursor:pointer}
+.open:hover .t{text-decoration:underline;text-decoration-color:var(--c);text-decoration-thickness:2px;text-underline-offset:3px}
+.mono{flex:none;width:40px;height:40px;border-radius:11px;display:grid;place-items:center;font:800 .95rem var(--display);color:var(--c);background:color-mix(in srgb,var(--c) 15%,transparent)}
+.txt{min-width:0}
+.t{display:block;font-weight:600}
+.d{display:block;color:var(--muted);font-size:.9rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.kind{font-size:.78rem;color:var(--muted);border:1px solid var(--line);border-radius:6px;padding:1px 7px;margin-left:6px;font-weight:500;vertical-align:2px}
+.star{flex:none;background:none;border:0;cursor:pointer;color:var(--muted);font-size:1.15rem;padding:8px;line-height:1;border-radius:8px}
+.star[aria-pressed="true"]{color:var(--c-futebol)}
+.star:hover{color:var(--ink)}
+.empty{margin-top:40px;color:var(--muted)}
+.empty b{color:var(--ink)}
+footer{margin-top:24px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;color:var(--muted);font-size:.9rem}
+footer a{color:var(--muted)}
+footer button{font:inherit;color:var(--muted);background:none;border:0;text-decoration:underline;cursor:pointer;padding:0}
+
+/* visualizador embutido */
+#viewer{position:fixed;inset:0;background:var(--bg);display:none;flex-direction:column;z-index:20;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+#viewer.on{display:flex}
+.vbar{display:flex;align-items:center;gap:10px;padding:10px 16px;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.vbar b{font-family:var(--display);font-weight:600;font-size:1.1rem;flex:1;min-width:140px}
+.btn{font:500 .92rem var(--body);color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:8px 14px;cursor:pointer;text-decoration:none}
+.btn:hover{border-color:var(--ink)}
+#frame{flex:1;width:100%;border:0;background:#fff}
+
+/* bloqueio */
+#lock{position:fixed;inset:0;background:var(--bg);display:none;place-items:center;z-index:30;padding:24px}
+#lock.on{display:grid}
+#lock form{width:min(360px,100%)}
+#lock h1{font-family:var(--display);font-weight:800;font-size:2.2rem;margin:0 0 16px;letter-spacing:-.02em}
+#lock input{width:100%;font:500 1.1rem var(--body);padding:14px 16px;border-radius:12px;border:1.5px solid var(--line);background:var(--surface);color:var(--ink)}
+#lock .btn{margin-top:12px;width:100%;padding:12px;background:var(--ink);color:var(--bg);border-color:var(--ink)}
+#lock p{color:#B3261E;min-height:1.5em;margin:10px 0 0}
+
+@media (max-width:560px){ .search kbd{display:none} .search input{padding-right:20px} }
+@media (prefers-reduced-motion:no-preference){
+  .hello,.today{animation:in .5s ease-out both} .today{animation-delay:.08s}
+  @keyframes in{from{opacity:0;transform:translateY(6px)}}
+}
+</style>
 </head>
-
 <body>
-  <!-- LOGIN -->
-  <div id="overlay" class="overlay" aria-modal="true" role="dialog">
-    <div class="modal">
-      <div class="head">
-        <div class="logo" aria-hidden="true"></div>
-        <div>
-          <h3>Entrar no Portal</h3>
-          <p>Digite a senha para ver seus links. (Dica: permissão no Drive é a segurança real.)</p>
-        </div>
-      </div>
-      <div class="body">
-        <div class="field">
-          <span aria-hidden="true">🔒</span>
-          <input id="pass" type="password" placeholder="Senha do portal" autocomplete="current-password" />
-          <button id="btnEnter" class="btn accent">Entrar</button>
-        </div>
-        <div id="msgErr" class="err">Senha incorreta.</div>
-        <div id="msgOk" class="ok">Ok! Abrindo…</div>
-        <div class="foot" style="margin-top:14px">
-          <span>✅ Busca + categorias + visualização embutida</span>
-          <span>⚙️ Trocar senha: edite <b>PASSWORD</b> no código</span>
-        </div>
-      </div>
+
+<div id="lock" role="dialog" aria-modal="true" aria-labelledby="lockTitle">
+  <form id="lockForm">
+    <h1 id="lockTitle">Painel</h1>
+    <label for="pw" style="display:block;margin-bottom:8px;color:var(--muted)">Senha</label>
+    <input id="pw" type="password" autocomplete="current-password">
+    <button class="btn" type="submit">Entrar</button>
+    <p id="pwErr" role="alert"></p>
+  </form>
+</div>
+
+<main class="wrap" id="app">
+  <header class="top">
+    <div>
+      <h1 class="hello" id="hello">Olá, Vinícios</h1>
+      <p class="today" id="today"></p>
     </div>
+    <div class="clock" id="clock" aria-hidden="true"></div>
+  </header>
+
+  <div class="search">
+    <label for="q" class="sr" style="position:absolute;left:-9999px">Buscar</label>
+    <input id="q" type="search" placeholder="Buscar app ou planilha… (Enter abre o primeiro)" autocomplete="off">
+    <kbd>/</kbd>
   </div>
+  <div class="chips" id="chips" role="group" aria-label="Filtrar por categoria"></div>
 
-  <!-- APP -->
-  <div class="wrap" id="app" style="display:none">
-    <div class="topbar">
-      <div class="brand">
-        <div class="logo"></div>
-        <div>
-          <h1>Meu Portal de Planilhas</h1>
-          <p>Links organizados: casa • finanças • saúde • etc</p>
-        </div>
-      </div>
-      <button id="logout" class="btn danger">Sair</button>
-    </div>
+  <section class="pinned" id="pinned" hidden>
+    <h2>Fixados</h2>
+    <div class="pinRow" id="pinRow"></div>
+  </section>
 
-    <div class="card">
-      <div class="card-in">
-        <div class="row">
-          <div class="search">
-            <span aria-hidden="true">🔎</span>
-            <input id="q" placeholder="Buscar (ex: 'cartas', 'saúde', 'gastos'...)" />
-            <span id="count" class="pill">0 links</span>
-          </div>
-          <span class="pill">Enter abre o 1º resultado</span>
-        </div>
+  <div class="shelves" id="shelves"></div>
+  <p class="empty" id="empty" hidden></p>
 
-        <div id="grid" class="grid" style="margin-top:16px"></div>
+  <footer>
+    <span>Toque na ☆ para fixar um item no topo.</span>
+    <span><a href="https://github.com/viniverk" target="_blank" rel="noopener">github.com/viniverk</a> <span id="logoutWrap" hidden>· <button id="logout">Sair</button></span></span>
+  </footer>
+</main>
 
-        <div class="foot">
-          <span>📌 Se uma planilha não abrir embutida: use “Publicar na web” e cole o link <b>pubhtml</b>.</span>
-          <span>🧩 Editar links: procure por <b>LINKS = [...]</b> no código</span>
-        </div>
-      </div>
-    </div>
+<div id="viewer" role="dialog" aria-modal="true" aria-labelledby="vTitle">
+  <div class="vbar">
+    <button class="btn" id="vBack">Voltar</button>
+    <b id="vTitle"></b>
+    <button class="btn" id="vFull">Tela cheia</button>
+    <a class="btn" id="vOpen" target="_blank" rel="noopener">Abrir em nova aba</a>
   </div>
-
-  <!-- VIEWER -->
-  <div id="viewer">
-    <div class="viewerTop">
-      <div class="viewerActions">
-        <button id="btnBack" class="btn">⬅ Voltar</button>
-        <button id="btnFull" class="btn">⛶ Tela cheia</button>
-        <a id="btnOpenGoogle" class="btn" href="#" target="_blank" rel="noopener noreferrer">↗ Abrir no Google</a>
-      </div>
-
-      <div class="viewerTitle">
-        <b id="viewerName">Visualizando</b>
-        <span id="viewerUrl">—</span>
-      </div>
-
-      <div class="viewerActions">
-        <span class="pill" id="viewerCat">—</span>
-      </div>
-    </div>
-
-    <iframe id="sheetFrame" src="" loading="lazy"></iframe>
-  </div>
+  <iframe id="frame" title="Conteúdo"></iframe>
+</div>
 
 <script>
-/**
- * =========================================================
- * 1) DEFINA SUA SENHA AQUI
- * =========================================================
- */
-const PASSWORD = "morgana";
+/* =========================================================
+   1) SENHA (opcional)
+   Deixe "" para abrir direto, sem tela de senha.
+   Atenção: o repositório é público, então a senha fica visível
+   para quem abrir o código. Proteja planilhas pelo compartilhamento do Drive.
+   ========================================================= */
+const PASSWORD = "";
 
-/**
- * =========================================================
- * 2) COLE/EDITE SEUS LINKS AQUI
- * =========================================================
- * IMPORTANTE:
- * - Para abrir EMBUTIDO, prefira links assim (pubhtml):
- *   https://docs.google.com/spreadsheets/d/ID/pubhtml?widget=true&headers=false
- * - Para o botão "Abrir no Google", informe também o urlGoogle (link normal /edit).
- */
-const LINKS = [
-  {
-    title: "Controle Financeiro Familiar",
-    desc: "Contas, receitas, saldo, dashboard",
-    cat: "Finanças",
-    urlEmbed: "https://docs.google.com/spreadsheets/d/e/2PACX-1vSZgXfZox6VPAUY9DMWp6EDL7o3ncwjHPglC0CV9zNE1SKS2ERYfGB_FB9oj7LZH4lJvtNW9xWpMUD9/pubhtml?gid=1877014164&amp;single=true&amp;widget=true&amp;headers=false",
-    urlGoogle: "https://docs.google.com/spreadsheets/d/1y0_IjfcVK6D8wlpM4RKMLNWQ3aui4vkvZyy0QPrLhNw/edit?gid=1877014164#gid=1877014164"
-  },
-  {
-    title: "Saúde - Checkups e exames",
-    desc: "Lista e histórico",
-    cat: "Saúde",
-    urlEmbed: "https://docs.google.com/spreadsheets/d/SEU_ID_AQUI/pubhtml?widget=true&headers=false",
-    urlGoogle: "https://docs.google.com/spreadsheets/d/SEU_ID_AQUI/edit"
-  },
-  {
-    title: "Casa - Manutenções",
-    desc: "Serviços, datas, custos",
-    cat: "Casa",
-    urlEmbed: "https://docs.google.com/spreadsheets/d/SEU_ID_AQUI/pubhtml?widget=true&headers=false",
-    urlGoogle: "https://docs.google.com/spreadsheets/d/SEU_ID_AQUI/edit"
-  },
-  {
-    title: "Cartas Pokémon - Inventário",
-    desc: "Compra, venda, ROI",
-    cat: "Hobbies",
-    urlEmbed: "https://docs.google.com/spreadsheets/d/e/2PACX-1vRK6RvZM71MH-7RdMtDqPy2Vjg26kjo4FabCBmqclZqzhfyQ2b_5hGYfP_6xEUa_1tKLjoNnvSQtsz_/pubhtml?gid=1025232193&amp;single=true&amp;widget=true&amp;headers=false",
-    urlGoogle: "https://docs.google.com/spreadsheets/d/1jElRxjNYY8t3-cGwK2oKRRozpzin4KGPhVtdgRkH18E/edit?gid=1025232193#gid=1025232193"
-  },
-  {
-    title: "Dashboard Trade Esportivo",
-    desc: "Acompanhamento e gestão das entradas",
-    cat: "Trabalho",
-    urlEmbed: "https://viniverk.github.io/dashboardtrade/",
-    urlGoogle: "https://viniverk.github.io/dashboardtrade/"
-  },
-  {
-    title: "VERK3D PRINT",
-    desc: "Acompanhamento e Portifólio Impressões",
-    cat: "Trabalho",
-    urlEmbed: "https://viniverk.github.io/calculadora-3d/",
-    urlGoogle: "https://viniverk.github.io/calculadora-3d/"
-  },
+/* =========================================================
+   2) CATEGORIAS (ordem em que aparecem)
+   ========================================================= */
+const CATS = [
+  { id: "financas", name: "Finanças" },
+  { id: "fe",       name: "Igreja e fé" },
+  { id: "futebol",  name: "Futebol" },
+  { id: "casa",     name: "Casa" },
+  { id: "hobbies",  name: "Hobbies" },
+  { id: "trabalho", name: "Trabalho e projetos" },
 ];
 
-/**
- * =========================================================
- * APP
- * =========================================================
- */
-const overlay = document.getElementById("overlay");
-const app = document.getElementById("app");
-const pass = document.getElementById("pass");
-const btnEnter = document.getElementById("btnEnter");
-const msgErr = document.getElementById("msgErr");
-const msgOk = document.getElementById("msgOk");
-const q = document.getElementById("q");
-const grid = document.getElementById("grid");
-const count = document.getElementById("count");
-const logout = document.getElementById("logout");
+/* =========================================================
+   3) LINKS
+   - url:   endereço que abre (nova aba)
+   - embed: (opcional) link "pubhtml" de planilha para abrir aqui dentro
+   - mono:  (opcional) 2 letras do ícone; se faltar, usa as iniciais
+   ========================================================= */
+const LINKS = [
+  { title: "Controle Financeiro Familiar", desc: "Contas, receitas, saldo e dashboard", cat: "financas",
+    embed: "https://docs.google.com/spreadsheets/d/e/2PACX-1vSZgXfZox6VPAUY9DMWp6EDL7o3ncwjHPglC0CV9zNE1SKS2ERYfGB_FB9oj7LZH4lJvtNW9xWpMUD9/pubhtml?gid=1877014164&single=true&widget=true&headers=false",
+    url:   "https://docs.google.com/spreadsheets/d/1y0_IjfcVK6D8wlpM4RKMLNWQ3aui4vkvZyy0QPrLhNw/edit?gid=1877014164#gid=1877014164" },
+  { title: "Controle de Finanças", desc: "App de finanças pessoais", cat: "financas",
+    url: "https://viniverk.github.io/controlefinancas/" },
+  { title: "Dashboard Trade Esportivo", desc: "Acompanhamento e gestão das entradas", cat: "financas", mono: "TE",
+    url: "https://viniverk.github.io/dashboardtrade/" },
 
-const viewer = document.getElementById("viewer");
-const sheetFrame = document.getElementById("sheetFrame");
-const btnBack = document.getElementById("btnBack");
-const btnFull = document.getElementById("btnFull");
-const btnOpenGoogle = document.getElementById("btnOpenGoogle");
-const viewerName = document.getElementById("viewerName");
-const viewerUrl = document.getElementById("viewerUrl");
-const viewerCat = document.getElementById("viewerCat");
+  { title: "Encontre seu GC", desc: "GC mais próximo pelo CEP · Igreja dos Filhos", cat: "fe", mono: "GC",
+    url: "https://viniverk.github.io/gcidf/" },
+  { title: "Estudo Bíblico", desc: "Estudos e anotações", cat: "fe",
+    url: "https://viniverk.github.io/estudosbiblicos/" },
 
-function setAuthed(v){ localStorage.setItem("portal_authed", v ? "1" : "0"); }
-function isAuthed(){ return localStorage.getItem("portal_authed") === "1"; }
-function normalize(s){ return (s||"").toString().toLowerCase().trim(); }
+  { title: "Discípulos United", desc: "Site do time", cat: "futebol", mono: "DU",
+    url: "https://viniverk.github.io/discipulosunited/" },
 
-function groupByCategory(items){
-  const map = new Map();
-  for(const it of items){
-    const cat = it.cat || "Outros";
-    if(!map.has(cat)) map.set(cat, []);
-    map.get(cat).push(it);
-  }
-  const cats = Array.from(map.keys()).sort((a,b)=>a.localeCompare(b,'pt-BR'));
-  return cats.map(c => [c, map.get(c).sort((a,b)=>a.title.localeCompare(b.title,'pt-BR'))]);
+  { title: "Obra em casa", desc: "Serviços do Jonathan", cat: "casa", mono: "OC",
+    url: "https://viniverk.github.io/servicos-jonathan/" },
+
+  { title: "Cartas Pokémon — inventário", desc: "Compra, venda e ROI", cat: "hobbies", mono: "PK",
+    embed: "https://docs.google.com/spreadsheets/d/e/2PACX-1vRK6RvZM71MH-7RdMtDqPy2Vjg26kjo4FabCBmqclZqzhfyQ2b_5hGYfP_6xEUa_1tKLjoNnvSQtsz_/pubhtml?gid=1025232193&single=true&widget=true&headers=false",
+    url:   "https://docs.google.com/spreadsheets/d/1jElRxjNYY8t3-cGwK2oKRRozpzin4KGPhVtdgRkH18E/edit?gid=1025232193#gid=1025232193" },
+  { title: "App Cartas Pokémon", desc: "Controle da coleção", cat: "hobbies", mono: "AP",
+    url: "https://viniverk.github.io/pokemon/" },
+  { title: "Grind", desc: "Análise de sessões GGPoker", cat: "hobbies", mono: "GR",
+    url: "https://viniverk.github.io/pokeranalyser/" },
+
+  { title: "VERK3D Print", desc: "Calculadora e portfólio de impressões 3D", cat: "trabalho", mono: "3D",
+    url: "https://viniverk.github.io/calculadora-3d/" },
+];
+
+/* ========================================================= */
+const $ = s => document.querySelector(s);
+const norm = s => (s||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();
+const store = {
+  get(k,d){ try{ const v=localStorage.getItem(k); return v?JSON.parse(v):d; }catch{ return d; } },
+  set(k,v){ try{ localStorage.setItem(k,JSON.stringify(v)); }catch{} }
+};
+const catById = Object.fromEntries(CATS.map(c=>[c.id,c]));
+const color = id => `var(--c-${id})`;
+const initials = it => it.mono || it.title.split(/\s+/).filter(w=>w.length>2).slice(0,2).map(w=>w[0]).join("").toUpperCase();
+LINKS.forEach((it,i)=>it.key = it.url);
+
+let pins = store.get("painel.pins", []);
+let activeCat = "all";
+
+/* saudação + relógio */
+function tick(){
+  const now = new Date(), h = now.getHours();
+  $("#hello").textContent = (h<5?"Boa noite":h<12?"Bom dia":h<18?"Boa tarde":"Boa noite") + ", Vinícios";
+  const d = now.toLocaleDateString("pt-BR",{weekday:"long",day:"numeric",month:"long"});
+  $("#today").textContent = d.charAt(0).toUpperCase()+d.slice(1);
+  $("#clock").textContent = now.toLocaleTimeString("pt-BR",{hour:"2-digit",minute:"2-digit"});
 }
+tick(); setInterval(tick, 15000);
 
-function iconFor(cat){
-  const c = normalize(cat);
-  if(c.includes("fin")) return "💰";
-  if(c.includes("saú") || c.includes("sau")) return "🩺";
-  if(c.includes("cas")) return "🏠";
-  if(c.includes("trab")) return "💼";
-  if(c.includes("hob") || c.includes("pok")) return "🎴";
-  return "📎";
+/* filtros */
+function renderChips(){
+  const all = [{id:"all",name:"Todos"}, ...CATS.filter(c=>LINKS.some(l=>l.cat===c.id))];
+  $("#chips").innerHTML = all.map(c=>`
+    <button class="chip" data-cat="${c.id}" aria-pressed="${c.id===activeCat}" style="--c:${c.id==="all"?"var(--muted)":color(c.id)}">
+      ${c.id==="all"?"":'<span class="dot"></span>'}${c.name}
+    </button>`).join("");
 }
-
-function openViewer(item){
-  // Mostra viewer
-  viewer.style.display = "block";
-  app.style.display = "none";
-
-  viewerName.textContent = item.title || "Visualizando";
-  viewerUrl.textContent = item.urlEmbed || "";
-  viewerCat.textContent = item.cat || "—";
-
-  // seta links
-  btnOpenGoogle.href = item.urlGoogle || (item.urlEmbed || "#");
-
-  // carrega iframe
-  sheetFrame.src = item.urlEmbed || "";
-
-  // scroll top (pra ficar clean no celular)
-  window.scrollTo({ top: 0, behavior: "instant" });
-}
-
-function closeViewer(){
-  sheetFrame.src = "";
-  viewer.style.display = "none";
-  app.style.display = "block";
-  setTimeout(() => q && q.focus(), 50);
-}
-
-btnBack.addEventListener("click", closeViewer);
-
-btnFull.addEventListener("click", async ()=>{
-  try{
-    if(!document.fullscreenElement){
-      await sheetFrame.requestFullscreen();
-    } else {
-      await document.exitFullscreen();
-    }
-  } catch(e){
-    // Se o browser bloquear, não quebra nada
-    alert("Seu navegador bloqueou tela cheia aqui. Tente pelo botão 'Abrir no Google'.");
-  }
+$("#chips").addEventListener("click", e=>{
+  const b = e.target.closest(".chip"); if(!b) return;
+  activeCat = b.dataset.cat; renderChips(); render();
 });
+
+function visible(){
+  const term = norm($("#q").value.trim());
+  return LINKS.filter(it =>
+    (activeCat==="all" || it.cat===activeCat) &&
+    (!term || norm(`${it.title} ${it.desc} ${catById[it.cat]?.name}`).includes(term)));
+}
+
+function opener(it, cls, inner){
+  if(it.embed) return `<button class="${cls}" data-embed="${it.key}">${inner}</button>`;
+  return `<a class="${cls}" href="${it.url}" target="_blank" rel="noopener">${inner}</a>`;
+}
 
 function render(){
-  const term = normalize(q.value);
-  const filtered = LINKS.filter(it => {
-    const hay = normalize((it.title||"") + " " + (it.desc||"") + " " + (it.cat||""));
-    return !term || hay.includes(term);
-  });
+  const list = visible();
+  const searching = $("#q").value.trim() !== "";
 
-  count.textContent = `${filtered.length} link${filtered.length===1?"":"s"}`;
-  const groups = groupByCategory(filtered);
-  grid.innerHTML = "";
+  // fixados
+  const pinned = LINKS.filter(it=>pins.includes(it.key));
+  $("#pinned").hidden = searching || activeCat!=="all" || !pinned.length;
+  $("#pinRow").innerHTML = pinned.map(it=>`
+    <div style="--c:${color(it.cat)}">${opener(it,"pinTile",`<span class="mono">${initials(it)}</span><b>${it.title}</b>`)}</div>`).join("");
 
-  if(filtered.length === 0){
-    const empty = document.createElement("div");
-    empty.className = "col-12 card";
-    empty.innerHTML = `<div class="card-in"><b>Nenhum resultado</b><div style="color:var(--muted); margin-top:6px">Tente outra palavra na busca.</div></div>`;
-    grid.appendChild(empty);
-    return;
-  }
+  // estantes
+  $("#shelves").innerHTML = CATS.map(c=>{
+    const items = list.filter(it=>it.cat===c.id);
+    if(!items.length) return "";
+    return `<section class="shelf" style="--c:${color(c.id)}">
+      <h2><span class="bar"></span>${c.name} <small>${items.length}</small></h2>
+      <ul class="list">${items.map(it=>{
+        const on = pins.includes(it.key);
+        return `<li class="row">
+          ${opener(it,"open",`<span class="mono">${initials(it)}</span>
+            <span class="txt"><span class="t">${it.title}${it.embed?'<span class="kind">planilha</span>':''}</span><span class="d">${it.desc||""}</span></span>`)}
+          <button class="star" data-pin="${it.key}" aria-pressed="${on}" aria-label="${on?"Desafixar":"Fixar"} ${it.title}">${on?"★":"☆"}</button>
+        </li>`;}).join("")}</ul>
+    </section>`;
+  }).join("");
 
-  for(const [cat, items] of groups){
-    const col = document.createElement("div");
-    col.className = "col-4 section";
-    col.innerHTML = `
-      <div class="card">
-        <div class="card-in">
-          <h2>
-            <span>${cat}</span>
-            <small>${items.length}</small>
-          </h2>
-          <div class="links"></div>
-        </div>
-      </div>
-    `;
-    const list = col.querySelector(".links");
-
-    for(const it of items){
-      const el = document.createElement("div");
-      el.className = "link";
-      el.setAttribute("role","button");
-      el.tabIndex = 0;
-
-      el.innerHTML = `
-        <div class="meta">
-          <div class="icon" aria-hidden="true">${iconFor(cat)}</div>
-          <div style="min-width:0">
-            <div class="title">${it.title}</div>
-            <div class="desc">${it.desc || ""}</div>
-          </div>
-        </div>
-        <div class="open">Abrir ▶</div>
-      `;
-
-      el.addEventListener("click", ()=> openViewer(it));
-      el.addEventListener("keydown", (e)=>{
-        if(e.key === "Enter" || e.key === " "){
-          e.preventDefault();
-          openViewer(it);
-        }
-      });
-
-      list.appendChild(el);
-    }
-
-    grid.appendChild(col);
-  }
+  const empty = $("#empty");
+  empty.hidden = list.length>0;
+  if(!list.length) empty.innerHTML = `Nada encontrado para <b>${$("#q").value.replace(/</g,"&lt;")}</b>. Tente outro nome ou volte para <b>Todos</b>.`;
 }
 
-function enter(){
-  msgErr.style.display = "none";
-  msgOk.style.display = "none";
-  if(pass.value === PASSWORD){
-    setAuthed(true);
-    msgOk.style.display = "block";
-    overlay.style.display = "none";
-    app.style.display = "block";
-    render();
-    setTimeout(() => q.focus(), 50);
-  } else {
-    msgErr.style.display = "block";
+/* cliques: fixar e abrir embutido */
+document.addEventListener("click", e=>{
+  const s = e.target.closest("[data-pin]");
+  if(s){
+    const k = s.dataset.pin;
+    pins = pins.includes(k) ? pins.filter(p=>p!==k) : [...pins,k];
+    store.set("painel.pins", pins); render(); return;
   }
-}
+  const v = e.target.closest("[data-embed]");
+  if(v){ openViewer(LINKS.find(l=>l.key===v.dataset.embed)); }
+});
 
-btnEnter.addEventListener("click", enter);
-pass.addEventListener("keydown", (e)=>{ if(e.key==="Enter") enter(); });
-
+/* busca */
+const q = $("#q");
 q.addEventListener("input", render);
-q.addEventListener("keydown", (e)=>{
-  if(e.key === "Enter"){
-    const term = normalize(q.value);
-    const filtered = LINKS.filter(it => normalize((it.title||"") + " " + (it.desc||"") + " " + (it.cat||"")).includes(term));
-    if(filtered.length > 0) openViewer(filtered[0]);
-  }
+q.addEventListener("keydown", e=>{
+  if(e.key==="Enter"){ const it = visible()[0]; if(!it) return;
+    it.embed ? openViewer(it) : window.open(it.url,"_blank","noopener"); }
+  if(e.key==="Escape"){ q.value=""; render(); }
+});
+document.addEventListener("keydown", e=>{
+  if(e.key==="/" && document.activeElement!==q && !$("#viewer").classList.contains("on") && !$("#lock").classList.contains("on")){ e.preventDefault(); q.focus(); }
+  if(e.key==="Escape" && $("#viewer").classList.contains("on")) closeViewer();
 });
 
-logout.addEventListener("click", ()=>{
-  setAuthed(false);
-  closeViewer();
-  app.style.display = "none";
-  overlay.style.display = "flex";
-  pass.value = "";
-  msgErr.style.display = "none";
-  msgOk.style.display = "none";
-  setTimeout(() => pass.focus(), 50);
-});
+/* visualizador */
+function openViewer(it){
+  $("#vTitle").textContent = it.title;
+  $("#vOpen").href = it.url;
+  $("#frame").src = it.embed;
+  $("#viewer").classList.add("on");
+  $("#vBack").focus();
+}
+function closeViewer(){ $("#viewer").classList.remove("on"); $("#frame").src="about:blank"; q.focus(); }
+$("#vBack").onclick = closeViewer;
+$("#vFull").onclick = ()=>{ const f=$("#frame"); (f.requestFullscreen||f.webkitRequestFullscreen||(()=>{})).call(f); };
 
-// Auto-login se já autenticou antes nesse navegador
-window.addEventListener("load", ()=>{
-  if(isAuthed()){
-    overlay.style.display = "none";
-    app.style.display = "block";
-    render();
-    setTimeout(() => q.focus(), 50);
-  } else {
-    overlay.style.display = "flex";
-    setTimeout(() => pass.focus(), 50);
-  }
+/* senha */
+function unlocked(){ try{ return sessionStorage.getItem("painel.ok")==="1"; }catch{ return false; } }
+if(PASSWORD && !unlocked()){
+  $("#lock").classList.add("on"); $("#app").inert = true; $("#pw").focus();
+}
+if(PASSWORD) $("#logoutWrap").hidden = false;
+$("#lockForm").addEventListener("submit", e=>{
+  e.preventDefault();
+  if($("#pw").value === PASSWORD){
+    try{ sessionStorage.setItem("painel.ok","1"); }catch{}
+    $("#lock").classList.remove("on"); $("#app").inert = false; q.focus();
+  } else { $("#pwErr").textContent = "Senha incorreta. Tente de novo."; $("#pw").select(); }
 });
+$("#logout").onclick = ()=>{ try{ sessionStorage.removeItem("painel.ok"); }catch{} location.reload(); };
+
+renderChips(); render();
+if(!PASSWORD) q.focus();
 </script>
 </body>
 </html>
