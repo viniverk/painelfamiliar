@@ -4,23 +4,32 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Painel do Vinícios</title>
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧭</text></svg>">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="theme-color" content="#ECEEE8" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#121915" media="(prefers-color-scheme: dark)">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Painel">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=Figtree:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 :root{
   --bg:#ECEEE8; --surface:#F8F9F5; --line:#D5D9CF; --ink:#1B2A24; --muted:#5D6B64;
-  --focus:#2F7D5B;
+  --focus:#2F7D5B; --ok:#2F7D5B; --warn:#A87A12;
   --c-financas:#2F7D5B; --c-fe:#6B4FA0; --c-futebol:#A87A12; --c-casa:#3A6EA5; --c-hobbies:#B23F62; --c-trabalho:#3E5566;
   --display:"Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
   --body:"Figtree", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --gutter:clamp(16px,4vw,40px);
   box-sizing:border-box;
   padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
 }
 @media (prefers-color-scheme: dark){
   :root{
-    --bg:#121915; --surface:#19221D; --line:#2A3630; --ink:#E4ECE7; --muted:#93A39A; --focus:#6FCB9F;
+    --bg:#121915; --surface:#19221D; --line:#2A3630; --ink:#E4ECE7; --muted:#93A39A; --focus:#6FCB9F; --ok:#6FCB9F; --warn:#E0B34A;
     --c-financas:#5CC191; --c-fe:#A98DE0; --c-futebol:#E0B34A; --c-casa:#74A6DA; --c-hobbies:#E57C9C; --c-trabalho:#94AFC2;
   }
 }
@@ -29,7 +38,7 @@ html{scroll-padding-top:env(safe-area-inset-top,0px)}
 body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 var(--body);-webkit-font-smoothing:antialiased}
 a{color:inherit}
 :focus-visible{outline:2px solid var(--focus);outline-offset:3px;border-radius:6px}
-.wrap{max-width:1120px;margin:0 auto;padding:clamp(24px,5vw,56px) clamp(16px,4vw,40px) 64px}
+.wrap{max-width:1120px;margin:0 auto;padding:clamp(20px,5vw,56px) var(--gutter) 64px}
 
 /* topo */
 header.top{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap}
@@ -37,14 +46,33 @@ header.top{display:flex;justify-content:space-between;align-items:flex-end;gap:2
 .today{margin:10px 0 0;color:var(--muted);font-size:1.05rem}
 .clock{font-family:var(--display);font-weight:400;font-size:clamp(2.4rem,6vw,4.2rem);line-height:1;letter-spacing:-.02em;font-variant-numeric:tabular-nums;color:var(--muted)}
 
+/* resumos */
+.glance{margin-top:32px;display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px}
+.gcard{display:flex;flex-direction:column;text-decoration:none;background:var(--surface);border:1px solid var(--line);border-top:3px solid var(--c);border-radius:16px;padding:14px 16px 12px;min-width:0}
+a.gcard:hover{border-color:var(--c)}
+.gcard .lbl{font:600 .78rem var(--body);color:var(--muted);text-transform:uppercase;letter-spacing:.07em;display:flex;justify-content:space-between;gap:8px}
+.gcard .big{font:800 1.45rem/1.15 var(--display);letter-spacing:-.01em;margin:8px 0 4px}
+.gcard .sub{color:var(--muted);font-size:.9rem}
+.gcard .me{margin-top:auto;padding-top:10px;font-size:.92rem;font-weight:600}
+.gcard .me.ok{color:var(--ok)} .gcard .me.warn{color:var(--warn)}
+.hlist{list-style:none;margin:8px 0 0;padding:0}
+.hlist li{display:flex;align-items:center;gap:8px;padding:3px 0;font-size:.95rem;min-width:0}
+.hlist .nm{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hlist .st{flex:none;font-variant-numeric:tabular-nums;color:var(--muted);font-size:.9rem}
+.hlist .done{flex:none;width:20px;height:20px;border-radius:50%;display:grid;place-items:center;font-size:.72rem;border:1.5px solid var(--line);color:transparent}
+.hlist .done.on{background:var(--ok);border-color:var(--ok);color:var(--bg)}
+.bar2{height:6px;border-radius:99px;background:color-mix(in srgb,var(--c) 18%,transparent);margin-top:8px;overflow:hidden}
+.bar2 i{display:block;height:100%;background:var(--c);border-radius:99px}
+.gcard.ghost .big{color:var(--muted);font-weight:600;font-size:1.1rem}
+
 /* busca */
-.search{margin-top:36px;position:relative}
+.search{margin-top:28px;position:relative}
 .search input{width:100%;font:500 1.15rem var(--body);color:var(--ink);background:var(--surface);border:1.5px solid var(--line);border-radius:14px;padding:16px 56px 16px 20px}
 .search input::placeholder{color:var(--muted)}
 .search input:focus{outline:none;border-color:var(--focus)}
 .search kbd{position:absolute;right:16px;top:50%;transform:translateY(-50%);font:600 .85rem var(--body);color:var(--muted);border:1px solid var(--line);border-radius:6px;padding:2px 8px}
 .chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
-.chip{font:500 .92rem var(--body);color:var(--ink);background:transparent;border:1px solid var(--line);border-radius:999px;padding:6px 14px;cursor:pointer;display:inline-flex;align-items:center;gap:8px}
+.chip{font:500 .92rem var(--body);color:var(--ink);background:transparent;border:1px solid var(--line);border-radius:999px;padding:6px 14px;cursor:pointer;display:inline-flex;align-items:center;gap:8px;white-space:nowrap;flex:none}
 .chip .dot{width:8px;height:8px;border-radius:50%;background:var(--c)}
 .chip[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
 
@@ -55,6 +83,7 @@ header.top{display:flex;justify-content:space-between;align-items:flex-end;gap:2
 .pinTile{display:flex;flex-direction:column;gap:14px;padding:16px;background:var(--surface);border:1px solid var(--line);border-radius:16px;text-decoration:none;cursor:pointer;text-align:left;font:inherit;color:inherit;width:100%}
 .pinTile:hover{border-color:var(--c)}
 .pinTile .mono{width:48px;height:48px;font-size:1.1rem}
+.pinTile .mono.emo{font-size:1.6rem}
 .pinTile b{font-weight:600;line-height:1.25}
 
 /* estantes por categoria */
@@ -67,6 +96,7 @@ header.top{display:flex;justify-content:space-between;align-items:flex-end;gap:2
 .open{flex:1;display:flex;align-items:center;gap:14px;padding:12px 4px;text-decoration:none;min-width:0;background:none;border:0;font:inherit;color:inherit;text-align:left;cursor:pointer}
 .open:hover .t{text-decoration:underline;text-decoration-color:var(--c);text-decoration-thickness:2px;text-underline-offset:3px}
 .mono{flex:none;width:40px;height:40px;border-radius:11px;display:grid;place-items:center;font:800 .95rem var(--display);color:var(--c);background:color-mix(in srgb,var(--c) 15%,transparent)}
+.mono.emo{font:400 1.3rem/1 "Apple Color Emoji","Segoe UI Emoji","Noto Color Emoji",sans-serif}
 .txt{min-width:0}
 .t{display:block;font-weight:600}
 .d{display:block;color:var(--muted);font-size:.9rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -76,9 +106,10 @@ header.top{display:flex;justify-content:space-between;align-items:flex-end;gap:2
 .star:hover{color:var(--ink)}
 .empty{margin-top:40px;color:var(--muted)}
 .empty b{color:var(--ink)}
-footer{margin-top:24px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;color:var(--muted);font-size:.9rem}
+footer{margin-top:24px;display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;color:var(--muted);font-size:.9rem}
 footer a{color:var(--muted)}
-footer button{font:inherit;color:var(--muted);background:none;border:0;text-decoration:underline;cursor:pointer;padding:0}
+footer button.link{font:inherit;color:var(--muted);background:none;border:0;text-decoration:underline;cursor:pointer;padding:0}
+.install{font:600 .9rem var(--body);color:var(--bg);background:var(--ink);border:0;border-radius:999px;padding:8px 16px;cursor:pointer}
 
 /* visualizador embutido */
 #viewer{position:fixed;inset:0;background:var(--bg);display:none;flex-direction:column;z-index:20;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
@@ -98,7 +129,21 @@ footer button{font:inherit;color:var(--muted);background:none;border:0;text-deco
 #lock .btn{margin-top:12px;width:100%;padding:12px;background:var(--ink);color:var(--bg);border-color:var(--ink)}
 #lock p{color:#B3261E;min-height:1.5em;margin:10px 0 0}
 
-@media (max-width:560px){ .search kbd{display:none} .search input{padding-right:20px} }
+/* celular: topo compacto, filtros e resumos em uma linha com rolagem lateral */
+@media (max-width:560px){
+  header.top{flex-wrap:nowrap;align-items:flex-start;gap:12px}
+  .hello{font-size:clamp(1.7rem,8vw,2.1rem)}
+  .today{margin-top:6px;font-size:.95rem}
+  .clock{font-size:1.35rem;padding-top:4px}
+  .search{margin-top:18px}
+  .search kbd{display:none}
+  .search input{padding:13px 16px;font-size:1.05rem}
+  .chips,.glance{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;margin-inline:calc(var(--gutter) * -1);padding-inline:var(--gutter);scroll-padding-inline:var(--gutter);overscroll-behavior-x:contain}
+  .chips::-webkit-scrollbar,.glance::-webkit-scrollbar{display:none}
+  .glance{display:flex;gap:10px;margin-top:20px;scroll-snap-type:x mandatory}
+  .gcard{flex:0 0 min(78%,300px);scroll-snap-align:start}
+  .pinned,.shelves{margin-top:28px}
+}
 @media (prefers-reduced-motion:no-preference){
   .hello,.today{animation:in .5s ease-out both} .today{animation-delay:.08s}
   @keyframes in{from{opacity:0;transform:translateY(6px)}}
@@ -126,10 +171,12 @@ footer button{font:inherit;color:var(--muted);background:none;border:0;text-deco
     <div class="clock" id="clock" aria-hidden="true"></div>
   </header>
 
+  <section class="glance" id="glance" aria-label="Resumo de hoje"></section>
+
   <div class="search">
-    <label for="q" class="sr" style="position:absolute;left:-9999px">Buscar</label>
-    <input id="q" type="search" placeholder="Buscar app ou planilha… (Enter abre o primeiro)" autocomplete="off">
-    <kbd>/</kbd>
+    <label for="q" style="position:absolute;left:-9999px">Buscar</label>
+    <input id="q" type="search" placeholder="Buscar app ou planilha…" autocomplete="off" enterkeyhint="go">
+    <kbd title="Atalho: aperte / para buscar e Enter para abrir o primeiro">/</kbd>
   </div>
   <div class="chips" id="chips" role="group" aria-label="Filtrar por categoria"></div>
 
@@ -143,7 +190,11 @@ footer button{font:inherit;color:var(--muted);background:none;border:0;text-deco
 
   <footer>
     <span>Toque na ☆ para fixar um item no topo.</span>
-    <span><a href="https://github.com/viniverk" target="_blank" rel="noopener">github.com/viniverk</a> <span id="logoutWrap" hidden>· <button id="logout">Sair</button></span></span>
+    <span>
+      <button class="install" id="install" hidden>Instalar app</button>
+      <a href="https://github.com/viniverk" target="_blank" rel="noopener">github.com/viniverk</a>
+      <span id="logoutWrap" hidden>· <button class="link" id="logout">Sair</button></span>
+    </span>
   </footer>
 </main>
 
@@ -182,43 +233,65 @@ const CATS = [
    3) LINKS
    - url:   endereço que abre (nova aba)
    - embed: (opcional) link "pubhtml" de planilha para abrir aqui dentro
-   - mono:  (opcional) 2 letras do ícone; se faltar, usa as iniciais
+   - icon:  (opcional) emoji do ícone
+   - mono:  (opcional) 2 letras, usadas se não houver emoji
    ========================================================= */
 const LINKS = [
-  { title: "Controle Financeiro Familiar", desc: "Contas, receitas, saldo e dashboard", cat: "financas",
+  { title: "Controle Financeiro Familiar", desc: "Contas, receitas, saldo e dashboard", cat: "financas", icon: "📊",
     embed: "https://docs.google.com/spreadsheets/d/e/2PACX-1vSZgXfZox6VPAUY9DMWp6EDL7o3ncwjHPglC0CV9zNE1SKS2ERYfGB_FB9oj7LZH4lJvtNW9xWpMUD9/pubhtml?gid=1877014164&single=true&widget=true&headers=false",
     url:   "https://docs.google.com/spreadsheets/d/1y0_IjfcVK6D8wlpM4RKMLNWQ3aui4vkvZyy0QPrLhNw/edit?gid=1877014164#gid=1877014164" },
-  { title: "Controle de Finanças", desc: "App de finanças pessoais", cat: "financas",
+  { title: "Controle de Finanças", desc: "App de finanças pessoais", cat: "financas", icon: "💰",
     url: "https://viniverk.github.io/controlefinancas/" },
-  { title: "Dashboard Trade Esportivo", desc: "Acompanhamento e gestão das entradas", cat: "financas", mono: "TE",
+  { title: "Dashboard Trade Esportivo", desc: "Acompanhamento e gestão das entradas", cat: "financas", icon: "📈",
     url: "https://viniverk.github.io/dashboardtrade/" },
 
-  { title: "Encontre seu GC", desc: "GC mais próximo pelo CEP · Igreja dos Filhos", cat: "fe", mono: "GC",
+  { title: "Minhas Metas", desc: "Jejuns, leitura e sequências de hábitos", cat: "fe", icon: "🎯",
+    url: "https://viniverk.github.io/appmetas/" },
+  { title: "Encontre seu GC", desc: "GC mais próximo pelo CEP · Igreja dos Filhos", cat: "fe", icon: "📍",
     url: "https://viniverk.github.io/gcidf/" },
-  { title: "Estudo Bíblico", desc: "Estudos e anotações", cat: "fe",
+  { title: "Estudo Bíblico", desc: "Estudos e anotações", cat: "fe", icon: "📖",
     url: "https://viniverk.github.io/estudosbiblicos/" },
 
-  { title: "Discípulos United", desc: "Site do time", cat: "futebol", mono: "DU",
+  { title: "Discípulos United", desc: "Site do time", cat: "futebol", icon: "⚽",
     url: "https://viniverk.github.io/discipulosunited/" },
 
-  { title: "Obra em casa", desc: "Serviços do Jonathan", cat: "casa", mono: "OC",
+  { title: "Obra em casa", desc: "Serviços do Jonathan", cat: "casa", icon: "🔨",
     url: "https://viniverk.github.io/servicos-jonathan/" },
 
-  { title: "Cartas Pokémon — inventário", desc: "Compra, venda e ROI", cat: "hobbies", mono: "PK",
+  { title: "Cartas Pokémon — inventário", desc: "Compra, venda e ROI", cat: "hobbies", icon: "🗂️",
     embed: "https://docs.google.com/spreadsheets/d/e/2PACX-1vRK6RvZM71MH-7RdMtDqPy2Vjg26kjo4FabCBmqclZqzhfyQ2b_5hGYfP_6xEUa_1tKLjoNnvSQtsz_/pubhtml?gid=1025232193&single=true&widget=true&headers=false",
     url:   "https://docs.google.com/spreadsheets/d/1jElRxjNYY8t3-cGwK2oKRRozpzin4KGPhVtdgRkH18E/edit?gid=1025232193#gid=1025232193" },
-  { title: "App Cartas Pokémon", desc: "Controle da coleção", cat: "hobbies", mono: "AP",
+  { title: "App Cartas Pokémon", desc: "Controle da coleção", cat: "hobbies", icon: "🃏",
     url: "https://viniverk.github.io/pokemon/" },
-  { title: "Grind", desc: "Análise de sessões GGPoker", cat: "hobbies", mono: "GR",
+  { title: "Grind", desc: "Análise de sessões GGPoker", cat: "hobbies", icon: "♠️",
     url: "https://viniverk.github.io/pokeranalyser/" },
 
-  { title: "VERK3D Print", desc: "Calculadora e portfólio de impressões 3D", cat: "trabalho", mono: "3D",
+  { title: "VERK3D Print", desc: "Calculadora e portfólio de impressões 3D", cat: "trabalho", icon: "🖨️",
     url: "https://viniverk.github.io/calculadora-3d/" },
 ];
 
+/* =========================================================
+   4) RESUMOS NO TOPO
+   Os apps abaixo moram no mesmo endereço do painel (viniverk.github.io),
+   então o painel lê os dados que eles já guardaram neste aparelho.
+   ========================================================= */
+const METAS = { url: "https://viniverk.github.io/appmetas/", key: "minhasMetas.v1" };
+const TIME  = {
+  url: "https://viniverk.github.io/discipulosunited/",
+  firebase: {   // mesmo projeto do site do time ("futfilhos"); só leitura aqui
+    apiKey: "AIzaSyDUb-I5YLnxTpcCOOK-zkRmhVEO54w0FMg",
+    authDomain: "futfilhos.firebaseapp.com",
+    projectId: "futfilhos",
+    storageBucket: "futfilhos.firebasestorage.app",
+    messagingSenderId: "660550364399",
+    appId: "1:660550364399:web:a041faed127a5504537f1a"
+  }
+};
+
 /* ========================================================= */
 const $ = s => document.querySelector(s);
-const norm = s => (s||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase();
+const esc = s => String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const norm = s => (s||"").normalize("NFD").replace(/[̀-ͯ]/g,"").toLowerCase();
 const store = {
   get(k,d){ try{ const v=localStorage.getItem(k); return v?JSON.parse(v):d; }catch{ return d; } },
   set(k,v){ try{ localStorage.setItem(k,JSON.stringify(v)); }catch{} }
@@ -226,7 +299,8 @@ const store = {
 const catById = Object.fromEntries(CATS.map(c=>[c.id,c]));
 const color = id => `var(--c-${id})`;
 const initials = it => it.mono || it.title.split(/\s+/).filter(w=>w.length>2).slice(0,2).map(w=>w[0]).join("").toUpperCase();
-LINKS.forEach((it,i)=>it.key = it.url);
+const iconHtml = it => it.icon ? `<span class="mono emo" aria-hidden="true">${it.icon}</span>` : `<span class="mono" aria-hidden="true">${initials(it)}</span>`;
+LINKS.forEach(it=>it.key = it.url);
 
 let pins = store.get("painel.pins", []);
 let activeCat = "all";
@@ -274,7 +348,7 @@ function render(){
   const pinned = LINKS.filter(it=>pins.includes(it.key));
   $("#pinned").hidden = searching || activeCat!=="all" || !pinned.length;
   $("#pinRow").innerHTML = pinned.map(it=>`
-    <div style="--c:${color(it.cat)}">${opener(it,"pinTile",`<span class="mono">${initials(it)}</span><b>${it.title}</b>`)}</div>`).join("");
+    <div style="--c:${color(it.cat)}">${opener(it,"pinTile",`${iconHtml(it)}<b>${it.title}</b>`)}</div>`).join("");
 
   // estantes
   $("#shelves").innerHTML = CATS.map(c=>{
@@ -285,7 +359,7 @@ function render(){
       <ul class="list">${items.map(it=>{
         const on = pins.includes(it.key);
         return `<li class="row">
-          ${opener(it,"open",`<span class="mono">${initials(it)}</span>
+          ${opener(it,"open",`${iconHtml(it)}
             <span class="txt"><span class="t">${it.title}${it.embed?'<span class="kind">planilha</span>':''}</span><span class="d">${it.desc||""}</span></span>`)}
           <button class="star" data-pin="${it.key}" aria-pressed="${on}" aria-label="${on?"Desafixar":"Fixar"} ${it.title}">${on?"★":"☆"}</button>
         </li>`;}).join("")}</ul>
@@ -294,7 +368,7 @@ function render(){
 
   const empty = $("#empty");
   empty.hidden = list.length>0;
-  if(!list.length) empty.innerHTML = `Nada encontrado para <b>${$("#q").value.replace(/</g,"&lt;")}</b>. Tente outro nome ou volte para <b>Todos</b>.`;
+  if(!list.length) empty.innerHTML = `Nada encontrado para <b>${esc($("#q").value)}</b>. Tente outro nome ou volte para <b>Todos</b>.`;
 }
 
 /* cliques: fixar e abrir embutido */
@@ -334,6 +408,148 @@ function closeViewer(){ $("#viewer").classList.remove("on"); $("#frame").src="ab
 $("#vBack").onclick = closeViewer;
 $("#vFull").onclick = ()=>{ const f=$("#frame"); (f.requestFullscreen||f.webkitRequestFullscreen||(()=>{})).call(f); };
 
+/* =========================================================
+   RESUMOS: Minhas Metas + próximo jogo do time
+   ========================================================= */
+const pad = n => String(n).padStart(2,"0");
+const dayKey = d => `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+const addDays = (k,n) => { const [y,m,d]=k.split("-").map(Number); const x=new Date(y,m-1,d+n); return dayKey(x); };
+const weekStart = k => { const [y,m,d]=k.split("-").map(Number); const x=new Date(y,m-1,d); x.setDate(x.getDate()-((x.getDay()+6)%7)); return dayKey(x); };
+const DAY = 864e5;
+const plural = (n,s,p) => `${n} ${n===1?s:p}`;
+function durTxt(ms){
+  const d = Math.floor(ms/DAY), h = Math.floor(ms%DAY/36e5);
+  return d ? `${plural(d,"dia","dias")}${d<3&&h?` e ${h}h`:""}` : `${Math.max(0,h)}h`;
+}
+
+// mesma regra de sequência do app Minhas Metas
+function habitStats(h){
+  const days = h.days||[], t = dayKey(new Date());
+  if(!h.perWeek || h.perWeek>=7){
+    const set = new Set(days); let k = set.has(t)?t:addDays(t,-1), cur=0;
+    while(set.has(k)){ cur++; k=addDays(k,-1); }
+    return { cur, unit: cur===1?"dia":"dias", done: set.has(t), label: set.has(t)?"feito hoje":"falta hoje" };
+  }
+  const cnt = {}; days.forEach(d=>{ const w=weekStart(d); cnt[w]=(cnt[w]||0)+1; });
+  const tw = weekStart(t), ok = w => (cnt[w]||0) >= h.perWeek;
+  let w = ok(tw)?tw:addDays(tw,-7), cur=0; while(ok(w)){ cur++; w=addDays(w,-7); }
+  const wk = cnt[tw]||0;
+  return { cur, unit: cur===1?"sem.":"sem.", done: wk>=h.perWeek, label:`${wk}/${h.perWeek} na semana` };
+}
+
+function metasCards(){
+  const D = store.get(METAS.key, null);
+  const link = (c, inner, extra="") => `<a class="gcard ${extra}" href="${METAS.url}" target="_blank" rel="noopener" style="--c:${color(c)}">${inner}</a>`;
+  if(!D) return link("fe", `<span class="lbl">🎯 Minhas Metas</span>
+    <span class="big">Sem dados neste aparelho</span>
+    <span class="sub">Abra o Minhas Metas aqui uma vez para suas sequências e jejuns aparecerem no painel.</span>`, "ghost");
+
+  const out = [];
+  const habits = (D.habits||[]);
+  if(habits.length){
+    const st = habits.map(h=>({h, s:habitStats(h)}));
+    const feitos = st.filter(x=>x.s.done).length;
+    out.push(link("fe", `<span class="lbl"><span>🔥 Sequências</span><span>${feitos}/${st.length} hoje</span></span>
+      <ul class="hlist">${st.slice(0,4).map(({h,s})=>`
+        <li><span class="done ${s.done?"on":""}" title="${esc(s.label)}">✓</span>
+          <span class="nm">${esc(h.icon||"⭐")} ${esc(h.name)}</span>
+          <span class="st">${s.cur} ${s.unit}</span></li>`).join("")}
+      </ul>${st.length>4?`<span class="sub">+${st.length-4} outras</span>`:""}`));
+  }
+
+  const fasts = (D.fasts||[]).filter(f=>f.startedAt);
+  if(fasts.length){
+    const f = fasts.sort((a,b)=>a.startedAt-b.startedAt)[0];
+    const ms = Date.now()-f.startedAt, pct = f.targetDays ? Math.min(100, ms/(f.targetDays*DAY)*100) : null;
+    out.push(link("fe", `<span class="lbl"><span>⏳ Jejum</span>${fasts.length>1?`<span>+${fasts.length-1}</span>`:""}</span>
+      <span class="big">${durTxt(ms)}</span>
+      <span class="sub">sem ${esc((f.name||"").toLowerCase())}${f.targetDays?` · meta de ${plural(f.targetDays,"dia","dias")}`:""}</span>
+      ${pct!==null?`<span class="bar2"><i style="width:${pct.toFixed(1)}%"></i></span>`:""}`));
+  }
+
+  const books = D.books||[], y = new Date().getFullYear(), goal = (D.goals||{})[y];
+  const lendo = books.find(b=>b.status==="lendo");
+  if(goal || lendo){
+    const lidos = books.filter(b=>b.status==="lido" && b.end && new Date(b.end).getFullYear()===y).length;
+    out.push(link("fe", `<span class="lbl">📚 Leitura ${y}</span>
+      <span class="big">${goal?`${lidos} de ${goal} livros`:plural(lidos,"livro lido","livros lidos")}</span>
+      ${lendo?`<span class="sub">Lendo: ${esc(lendo.title)}${lendo.pages?` · pág. ${lendo.page||0} de ${lendo.pages}`:""}</span>`:""}
+      ${goal?`<span class="bar2"><i style="width:${Math.min(100,lidos/goal*100).toFixed(1)}%"></i></span>`:""}`));
+  }
+  return out.join("");
+}
+
+/* próximo jogo — lê o Firebase do site do time com o login que este aparelho já tem lá */
+let game = { state:"loading" };
+function gameCard(){
+  const wrap = (inner, extra="") => `<a class="gcard ${extra}" href="${TIME.url}" target="_blank" rel="noopener" style="--c:${color("futebol")}">
+    <span class="lbl">⚽ Próximo jogo</span>${inner}</a>`;
+  if(game.state==="loading") return wrap(`<span class="big">Carregando…</span>`, "ghost");
+  if(game.state==="offline") return wrap(`<span class="big">Sem conexão</span><span class="sub">Não deu para buscar os jogos agora.</span>`, "ghost");
+  if(game.state==="login") return wrap(`<span class="big">Entre no app do time</span><span class="sub">Abra o Discípulos United neste aparelho e faça o login uma vez; depois o próximo jogo aparece aqui.</span>`, "ghost");
+  const j = game.jogo;
+  if(!j) return wrap(`<span class="big">Nenhum jogo marcado</span><span class="sub">Quando a próxima rodada for criada, ela aparece aqui.</span>`, "ghost");
+
+  const hoje = dayKey(new Date()), amanha = addDays(hoje,1);
+  const [y,m,d] = j.data.split("-").map(Number);
+  const wd = new Date(y,m-1,d).toLocaleDateString("pt-BR",{weekday:"long"});
+  const quando = j.data===hoje ? "Hoje" : j.data===amanha ? "Amanhã" : `${wd.charAt(0).toUpperCase()+wd.slice(1).replace("-feira","")}, ${pad(d)}/${pad(m)}`;
+  const conf = Object.entries(j.presencas||{}).filter(([,p])=>p.status==="in").sort((a,b)=>(a[1].em||0)-(b[1].em||0)).map(([id])=>id);
+  const vagas = Number(j.vagas)||0;
+  let me = "", cls = "";
+  if(game.atleta){
+    const p = (j.presencas||{})[game.atleta];
+    if(p?.status==="in"){ const pos = conf.indexOf(game.atleta); if(vagas && pos>=vagas){ me = `⏳ Você está na lista de espera (${pos-vagas+1}º)`; cls="warn"; } else { me = "✅ Você está confirmado"; cls="ok"; } }
+    else if(p?.status==="out"){ me = "❌ Você marcou que não vai"; }
+    else { me = "❔ Você ainda não confirmou"; cls="warn"; }
+  }
+  return wrap(`<span class="big">${quando}${j.hora?` · ${esc(j.hora)}`:""}</span>
+    <span class="sub">${j.local?esc(j.local)+" · ":""}${conf.length}${vagas?`/${vagas}`:""} confirmados</span>
+    ${vagas?`<span class="bar2"><i style="width:${Math.min(100,conf.length/vagas*100).toFixed(1)}%"></i></span>`:""}
+    ${me?`<span class="me ${cls}">${me}</span>`:""}`);
+}
+
+function renderGlance(){ $("#glance").innerHTML = gameCard() + metasCards(); }
+
+async function loadGame(){
+  const V = "https://www.gstatic.com/firebasejs/10.12.2/";
+  let app, auth, fs;
+  try{ [app, auth, fs] = await Promise.all(["app","auth","firestore"].map(n=>import(V+"firebase-"+n+".js"))); }
+  catch{ game = {state:"offline"}; renderGlance(); return; }
+  const a = app.initializeApp(TIME.firebase);
+  const au = auth.getAuth(a), db = fs.getFirestore(a);
+  let unsub = null;
+  auth.onAuthStateChanged(au, async u=>{
+    if(unsub){ unsub(); unsub = null; }
+    if(!u){ game = {state:"login"}; renderGlance(); return; }
+    let atleta = null;
+    try{ const v = await fs.getDoc(fs.doc(db,"vinculos",u.uid)); atleta = v.exists() ? v.data().atletaId : null; }catch{}
+    unsub = fs.onSnapshot(fs.collection(db,"jogos"), s=>{
+      const hoje = dayKey(new Date());
+      const jogo = s.docs.map(d=>({id:d.id, ...d.data()}))
+        .filter(j=>!j.cancelada && j.data && j.data>=hoje)
+        .sort((x,y)=>x.data.localeCompare(y.data))[0] || null;
+      game = {state:"ok", jogo, atleta}; renderGlance();
+    }, err=>{ game = {state: err.code==="permission-denied" ? "login" : "offline"}; renderGlance(); });
+  });
+}
+
+// atualiza quando volta para o painel (ex.: depois de marcar um hábito no Metas)
+window.addEventListener("storage", e=>{ if(e.key===METAS.key) renderGlance(); });
+document.addEventListener("visibilitychange", ()=>{ if(!document.hidden){ tick(); renderGlance(); } });
+setInterval(renderGlance, 60000);
+
+/* =========================================================
+   APP INSTALÁVEL
+   ========================================================= */
+if("serviceWorker" in navigator && location.protocol==="https:"){
+  navigator.serviceWorker.register("sw.js").catch(()=>{});
+}
+let installEvt = null;
+window.addEventListener("beforeinstallprompt", e=>{ e.preventDefault(); installEvt = e; $("#install").hidden = false; });
+window.addEventListener("appinstalled", ()=>{ $("#install").hidden = true; installEvt = null; });
+$("#install").onclick = async ()=>{ if(!installEvt) return; installEvt.prompt(); await installEvt.userChoice; installEvt = null; $("#install").hidden = true; };
+
 /* senha */
 function unlocked(){ try{ return sessionStorage.getItem("painel.ok")==="1"; }catch{ return false; } }
 if(PASSWORD && !unlocked()){
@@ -349,8 +565,9 @@ $("#lockForm").addEventListener("submit", e=>{
 });
 $("#logout").onclick = ()=>{ try{ sessionStorage.removeItem("painel.ok"); }catch{} location.reload(); };
 
-renderChips(); render();
-if(!PASSWORD) q.focus();
+renderChips(); render(); renderGlance(); loadGame();
+// no celular não abre o teclado sozinho
+if(!PASSWORD && matchMedia("(min-width:561px)").matches) q.focus();
 </script>
 </body>
 </html>
